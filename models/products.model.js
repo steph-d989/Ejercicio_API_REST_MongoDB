@@ -32,7 +32,11 @@ const objectSchema = {
             }, 
             message: "Porfa, sólo imágenes JPG o PNG"
         }
-    }
+    },
+    provider: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Provider'
+    }
 };
 // Crear el esquema
 const productSchema = mongoose.Schema(objectSchema);
@@ -42,3 +46,15 @@ const productSchema = mongoose.Schema(objectSchema);
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
+
+/* const product = new Product({
+    id: 1,
+    title: "lentejitas",
+    price: 5,
+    description: "unas ricas lentejitas",
+    image: "estaimage.png"
+})
+//Guardar en el BBDD
+product.save()
+        .then((data)=>console.log(data))
+        .catch(err=>console.log(err)); */
