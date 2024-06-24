@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const app = express()
 const port = 3000
@@ -10,6 +11,7 @@ const morgan = require('./middlewares/morgan');
 app.use(morgan(':method :host :status :param[id] - :response-time ms :body'));
 
 // Rutas
+// const productsApiRoutes = require("./routes/productsApi.routes")
 const productsRoutes = require("./routes/products.routes")
 const providersRoutes = require("./routes/providers.routes")
 
@@ -17,14 +19,15 @@ app.use(express.json()); // Habilito recepción de JSON en servidor
 
 // Rutas
 //API
-//app.use('/api/products',productsApiRoutes);
+app.use('/api/products',productsRoutes);
+app.use('/api/providers',providersRoutes);
 
 //WEB
-//app.use('/products',productsRoutes);
+// app.use('/api/products',productsRoutes);
 
 // Para rutas no existentes
 app.use('*',error404);
 
 app.listen(port, () => {
-  console.log(`Nos vamos a por tortilla. Funcionando en: http://localhost:${port}`)
+  console.log(`Example app listening on http://localhost:${port}`)
 })

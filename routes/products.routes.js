@@ -1,10 +1,23 @@
-const productsController = require('../controllers/products.controllers');
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
+const productController = require('../controllers/products.controllers');
 
-// GET http://localhost:3000/api/products
-router.get("/:id?", productsController.getProduct);
-router.post("/", productsController.createProduct);
-/* router.put("/", productsController.editProduct);
-router.delete("/:id?", productsController.deleteProduct); */
+
+router.get('/', productController.getProducts);
+router.post('/', productController.createProducts);
+router.put('/', productController.updateProducts);
+router.delete('/', productController.deleteProducts);
 
 module.exports = router;
+
+// GET http://localhost:3000/api/products --> ALL
+// PUT http://localhost:3000/api/products?title=manzana
+// POST http://localhost:3000/api/products
+// ejemplo para POST:
+// {
+//     "title": "gamba",
+//     "price": "19",
+//     "description": "gamba rica",
+//     "image": "gamba.jpg",
+//     "provider": "Dia"
+// }

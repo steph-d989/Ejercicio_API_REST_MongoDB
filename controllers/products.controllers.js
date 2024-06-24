@@ -1,46 +1,55 @@
-const Product = require('../services/products.services');
+const { response } = require('express');
+const productService = require('../services/products.services');
 
-// CREATE
-const createProduct = async (req, res) => {
-    console.log(req.body);
-
-    try{
-        const data = req.body;
-        let answer = await new Product(data).save();
-        res.status(201).json(answer);
-
-    }catch (error) {
-        console.log(`ERROR: ${error.stack}`);
-        res.status(400).json({msj:`ERROR: ${error.stack}`});
+const getProducts = async (req, res) => {
+    let products;
+    try {
+        products = await productService.listProducts();
+        res.status(200).json(products); // [] con los productos encontradas
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-}
+};
 
-// READ
-const getProduct = async (req, res) => {
+const createProducts = async (req, res) => {
+    const { title, price, description, image, company_name } = req.body;
         try {
-            const id = req.params.id;
-            let products = id? await Product.find({id},'-_id -__v') : await Product.find({},'-_id -__v'); //{}
-            res.status(200).json(products); // Respuesta de la API para 1 producto
+            const response = await productService.createProduct(title, price, description, image, company_name);
+            res.status(201).json({
+                "items_created": response,
+                data: req.body
+            });
+        } catch (error) {
+            res.status(500).json({ mensaje: error.message });
         }
-        catch (error) {
-            console.log(`ERROR: ${error.stack}`);
-            res.status(400).json({msj:`ERROR: ${error.stack}`});
+};
+
+const updateProducts = async (req, res) => {
+    filter = req.query;
+    update = req.body;
+        try {
+            const modifiedProduct = await productService.updateProduct(filter, update);
+            res.status(200).json(modifiedProduct);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
-}
+};
 
-// UPATE
-const editProduct = (req, res) => {
-    res.status(200).send("Producto editado!");
-}
-
-// DELETE
-const deleteProduct = (req, res) => {
-    res.status(200).send("Producto borrado!. Has borrado:"+req.params.id);
-}
+// deleteProduct
+// DELETE http://localhost:3000/api/products?title=title.valor
+const deleteProducts = async (req, res) => {
+    let products;
+    try {
+        products = await productService.deleteProduct(req.query.title);
+        res.status(200).json(products); // [] con los products encontradas
+    } catch (error) {
+        res.status(500).json({ error: "Error en la BBDD" });
+    }
+};
 
 module.exports = {
-    createProduct,
-    getProduct,
-    //editProduct,
-    //deleteProduct
-}
+    getProducts,
+    createProducts,
+    updateProducts,
+    deleteProducts
+};

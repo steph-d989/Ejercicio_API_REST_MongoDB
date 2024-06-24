@@ -1,22 +1,23 @@
+const express = require('express');
+const router = express.Router();
 const providerController = require('../controllers/provider.controllers');
-const router = require('express').Router();
 
-// GET http://localhost:3000/api/products
-router.get("/:id?", providerController.getProvider);
-router.post("/", providerController.createProvider);
-//router.put("/", providerController.editProvider);
-//router.delete("/:id?", providerController.deleteProvider);
+
+router.get('/', providerController.getProviders);
+router.post('/', providerController.createProvider);
+router.put('/', providerController.updateProviders);
+router.delete('/', providerController.deleteProviders);
 
 module.exports = router;
 
-/*
-POST /provider
-
-A enviar por Body:
-{
-    "company_name": "Las malcriadas de Roberto",
-    "CIF": "A34562345",
-    "address": "Su casa S/N",
-    "url_web": "www.robertoysuschicas.com"
-    }
-*/
+// GET http://localhost:3000/api/providers --> ALL
+// PUT http://localhost:3000/api/providers?company_name=name
+// POST http://localhost:3000/api/providers
+// ejemplo para POST:
+// {
+//     company_name: "Alcampo",
+//     CIF: "A40236882",
+//     address: "Calle de Fulgencio 112",
+//     url_web: "https://www.alcampo.com",
+//     isActive: true
+// }

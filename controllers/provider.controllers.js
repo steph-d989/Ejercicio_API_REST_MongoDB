@@ -1,46 +1,53 @@
-const Provider = require('../services/provider.services');
+const { response } = require('express');
+const providerService = require('../services/provider.services');
 
-// CREATE
 const createProvider = async (req, res) => {
-    console.log(req.body);
+    const { company_name, CIF, address, url_web} = req.body;
+    try {
+            const response = await providerService.createProvider(company_name, CIF, address, url_web);
+            res.status(201).json({
+                "items_created": response,
+                data: req.body
+            });
+        } catch (error) {
+            res.status(500).json({ mensaje: error.message });
+        }
+};
 
-    try{
-        const data = req.body;
-        let answer = await new Provider(data).save();
-        res.status(201).json(answer);
-
-    }catch (error) {
-        console.log(`ERROR: ${error.stack}`);
-        res.status(400).json({msj:`ERROR: ${error.stack}`});
+const getProviders = async (req, res) => {
+    let providers;
+    try {
+        providers = await providerService.listProviders();
+        res.status(200).json(providers); // [] con las authors encontradas
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-}
+};
 
-// READ
- const getProvider = async (req, res) => {
+const updateProviders = async (req, res) => {
+    filter = req.query;
+    update = req.body;
         try {
-            const id = req.params.id;
-            let provider = id? await Provider.find({id},'-_id -__v') : await Provider.find({},'-_id -__v'); //{}
-            res.status(200).json(provider); // Respuesta de la API para 1 producto
+            const modifiedProvider = await providerService.updateProvider(filter, update);
+            res.status(200).json(modifiedProvider);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
-        catch (error) {
-            console.log(`ERROR: ${error.stack}`);
-            res.status(400).json({msj:`ERROR: ${error.stack}`});
-        }
-}
+};
 
-// UPATE
-/*const editProvider = (req, res) => {
-    res.status(200).send("Provider editado!");
-}
-
-// DELETE
-const deleteProvider = (req, res) => {
-    res.status(200).send("Provider borrado!. Has borrado:"+req.params.id);
-} */
+const deleteProviders = async (req, res) => {
+    let providers;
+    try {
+        providers = await providerService.deleteProvider(req.query.company_name);
+        res.status(200).json(providers); // [] con los providers encontradas
+    } catch (error) {
+        res.status(500).json({ error: "Error en la BBDD" });
+    }
+};
 
 module.exports = {
     createProvider,
-    getProvider,
-    //editProvider,
-    //deleteProvider
+    getProviders,
+    updateProviders,
+    deleteProviders
 }
