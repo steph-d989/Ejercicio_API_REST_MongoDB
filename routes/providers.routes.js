@@ -3,10 +3,10 @@ const router = express.Router();
 const providerController = require('../controllers/provider.controllers');
 
 
-router.get('/', providerController.getProviders);
-router.post('/', providerController.createProvider);
-router.put('/', providerController.updateProviders);
-router.delete('/', providerController.deleteProviders);
+router.get('/', validateGetProducts, providerController.getProviders);
+router.post('/', validateGetProducts, providerController.createProvider);
+router.put('/', validateGetProducts, providerController.updateProviders);
+router.delete('/', validateGetProducts, providerController.deleteProviders);
 
 module.exports = router;
 
